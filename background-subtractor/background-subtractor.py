@@ -29,10 +29,7 @@ while True:
     contours, _ = cv2.findContours(fgmask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(frame, contours, -1, (0, 255, 0))
 
-    # contours_square = []
-    # for c in contours:
-    #     contours_square.append(cv2.contourArea(c))
-    # contours_index = heapq.nlargest(10, contours_square)
+    # 最小面积阈值
     contours = [c for c in contours if cv2.contourArea(c) > 10]
     for c in contours:
         # 这个判断是为了忽略出现闪烁而识别出多个contours的情况
