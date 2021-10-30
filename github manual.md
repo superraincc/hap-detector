@@ -7,6 +7,8 @@
 
 `git remote remove <name>`:删除git远程仓库
 
+`git branch -a`:查看所有分支（本地和远程）
+
 ### 合并分支
 `git merge <branch>`:将分支合并到当前分支
 ### 删除分支
