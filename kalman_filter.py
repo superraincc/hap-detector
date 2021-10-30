@@ -1,44 +1,29 @@
-'''
-    File name         : kalman_filter.py
-    File Description  : Kalman Filter Algorithm Implementation
-    Author            : Srini Ananthakrishnan
-    Date created      : 07/14/2017
-    Date last modified: 07/16/2017
-    Python Version    : 2.7
-'''
-
-# Import python libraries
 import numpy as np
 
 
 class KalmanFilter(object):
-    """Kalman Filter class keeps track of the estimated state of
-    the system and the variance or uncertainty of the estimate.
-    Predict and Correct methods implement the functionality
-    Reference: https://en.wikipedia.org/wiki/Kalman_filter
-    Attributes: None
-    """
 
     def __init__(self):
-        """Initialize variable used by Kalman Filter class
-        Args:
-            None
-        Return:
-            None
-        """
+
         self.dt = 0.005  # delta time
+        # F:状态转移矩阵，也就是Φ
+        self.F = np.array([[1.0, self.dt], [0.0, 1.0]])
 
-        # 
-        self.A = np.array([[1, 0], [0, 1]])  # matrix in observation equations
-        self.u = np.zeros((2, 1))  # previous state vector
-
+        # H:测量矩阵
+        self.H = np.array([[1, 0], [0, 1]])
+        
+        # 状态向量
+        self.u = np.zeros((2, 1))
+        
         # (x,y) tracking object center
         self.b = np.array([[0], [255]])  # vector of observations
 
-        self.P = np.diag((3.0, 3.0))  # covariance matrix
-        self.F = np.array([[1.0, self.dt], [0.0, 1.0]])  # state transition mat
+        # P:误差协方差矩阵
+        self.P = np.diag((3.0, 3.0))
+        
+        # Q:过程噪声协方差矩阵
+        self.Q = np.eye(self.u.shape[0])
 
-        self.Q = np.eye(self.u.shape[0])  # process noise matrix
         self.R = np.eye(self.b.shape[0])  # observation noise matrix
         self.lastResult = np.array([[0], [255]])
 
@@ -59,9 +44,11 @@ class KalmanFilter(object):
         Return:
             vector of predicted state estimate
         """
-        # Predicted state estimate
+
+        # 预测k时刻状态向量
         self.u = np.round(np.dot(self.F, self.u))
-        # Predicted estimate covariance
+        
+        # 更新误差协方差矩阵
         self.P = np.dot(self.F, np.dot(self.P, self.F.T)) + self.Q
         self.lastResult = self.u  # same last predicted result
         return self.u
@@ -94,10 +81,12 @@ class KalmanFilter(object):
             self.b = self.lastResult
         else:  # update using detection
             self.b = b
-        C = np.dot(self.A, np.dot(self.P, self.A.T)) + self.R
-        K = np.dot(self.P, np.dot(self.A.T, np.linalg.inv(C)))
 
-        self.u = np.round(self.u + np.dot(K, (self.b - np.dot(self.A,
+            
+        C = np.dot(self.H, np.dot(self.P, self.H.T)) + self.R
+        K = np.dot(self.P, np.dot(self.H.T, np.linalg.inv(C)))
+
+        self.u = np.round(self.u + np.dot(K, (self.b - np.dot(self.H,
                                                               self.u))))
         self.P = self.P - np.dot(K, np.dot(C, K.T))
         self.lastResult = self.u
