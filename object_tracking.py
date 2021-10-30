@@ -12,9 +12,10 @@
 import cv2
 import copy
 from detectors import Detectors
+from detector import Detector
 from tracker import Tracker
 
-vedio = r'D:\000AAA MINT\SCDX\HAP\HAP-big.mp4'
+vedio = r'D:\000AAA MINT\SCDX\HAP\HAP-small.mp4'
 videoroute = r'D:\000AAA MINT\SCDX\HAP\HAP-output-MOG2\HAP-big\out.avi'
 
 # 超过这一下落高度，则报警为高空抛物事件
@@ -48,7 +49,7 @@ def main():
     print((width, height))
 
     # Create Object Detector
-    detector = Detectors()
+    detector = Detector()
 
     # Create Object Tracker
     tracker = Tracker(dist_thresh=200, max_frames_to_skip=10, max_trace_length=30, trackIdCount=100)
@@ -80,7 +81,7 @@ def main():
             continue
 
         # Detect and return centeroids of the objects in the frame
-        centers = detector.Detect(frame)
+        centers, _, _ = detector.apply(frame)
 
         # If centroids are detected then track them
         if (len(centers) > 0):

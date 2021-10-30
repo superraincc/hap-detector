@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class KalmanFilter(object):
 
     def __init__(self):
