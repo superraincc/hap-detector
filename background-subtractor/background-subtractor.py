@@ -1,10 +1,10 @@
 import cv2
 import heapq
 
-vedio = r'.\data\hap-big.mp4'
+video = r'.\data\hap-big.mp4'
 videoroute = r'.\output'
 
-cap = cv2.VideoCapture(vedio)
+cap = cv2.VideoCapture(video)
 
 # 提高history, 提高var可以减弱闪烁效应
 fgbg = cv2.createBackgroundSubtractorMOG2(history=800, varThreshold=100, detectShadows=False)
