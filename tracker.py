@@ -158,15 +158,18 @@ class Tracker(object):
 
         # Update KalmanFilter state, lastResults and tracks trace
         for i in range(len(assignment)):
-            self.tracks[i].KF.predict()
+            # self.tracks[i].KF.predict()
 
             if(assignment[i] != -1):
                 self.tracks[i].skipped_frames = 0
-                self.tracks[i].prediction = self.tracks[i].KF.correct(
-                                            detections[assignment[i]], 1)
-            else:
-                self.tracks[i].prediction = self.tracks[i].KF.correct(
-                                            np.array([[0], [0]]), 0)
+                self.tracks[i].prediction = self.tracks[i].KF.predict()
+                self.tracks[i].KF.correct(detections[assignment[i]])
+
+                # self.tracks[i].prediction = self.tracks[i].KF.correct(
+                #                             detections[assignment[i]], 1)
+            # else:
+                # self.tracks[i].prediction = self.tracks[i].KF.correct(
+                #                             np.array([[0], [0]]), 0)
 
             if(len(self.tracks[i].trace) > self.max_trace_length):
                 for j in range(len(self.tracks[i].trace) -
@@ -174,4 +177,4 @@ class Tracker(object):
                     del self.tracks[i].trace[j]
 
             self.tracks[i].trace.append(self.tracks[i].prediction)
-            self.tracks[i].KF.lastResult = self.tracks[i].prediction
+            # self.tracks[i].KF.lastResult = self.tracks[i].prediction

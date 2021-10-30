@@ -11,7 +11,6 @@
 # Import python libraries
 import cv2
 import copy
-from detectors import Detectors
 from detector import Detector
 from tracker import Tracker
 
