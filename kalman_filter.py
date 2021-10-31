@@ -42,12 +42,12 @@ class KalmanFilter(object):
 
     def correct(self, currentMeasurement):
         # 计算卡尔曼增益
-        self.K = self.P * self.H.T * (self.H * self.P * self.H.T + self.R)
+        self.K = self.P * self.H.T * np.linalg.inv(self.H * self.P * self.H.T + self.R)
 
         # 根据测量值修正预测结果
         self.state = self.predictedState + \
             self.K * (currentMeasurement - self.H * self.predictedState)
 
         # 更新测量最小协方差
-        self.P = self.P - self.K * self.H * self.P
+        self.P = (np.identity(self.P.shape[0]) - self.K * self.H) * self.P
 
