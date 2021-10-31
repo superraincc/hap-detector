@@ -15,3 +15,6 @@
 `git branch -D <branch>`:删除本地分支
 
 `git push origin --delete <remote branch>`:删除远程分支
+
+#### Note：解决github上markdown不支持公式预览的问题
+连接外部图片<https://latex.codecogs.com/>
