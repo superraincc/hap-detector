@@ -36,10 +36,6 @@ class Track(object):
 
 
 class Tracker(object):
-    """Tracker class that updates track vectors of object tracked
-    Attributes:
-        None
-    """
 
     def __init__(self, dist_thresh, max_frames_to_skip, max_trace_length,
                  trackIdCount):

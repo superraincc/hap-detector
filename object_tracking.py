@@ -71,18 +71,16 @@ def main():
         if not ret:
             break
 
-        # Make copy of original frame
-        orig_frame = copy.copy(frame)
+        # # Make copy of original frame
+        # orig_frame = copy.copy(frame)
 
-        # Skip initial frames that display logo
-        if (skip_frame_count < 15):
-            skip_frame_count += 1
-            continue
+        # # Skip initial frames that display logo
+        # if (skip_frame_count < 15):
+        #     skip_frame_count += 1
+        #     continue
 
-        # Detect and return centeroids of the objects in the frame
         centers, _, _ = detector.apply(frame)
 
-        # If centroids are detected then track them
         if (len(centers) > 0):
 
             # Track object using Kalman Filter

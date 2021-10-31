@@ -25,6 +25,7 @@ class Detector(object):
                 x, y, w, h = cv2.boundingRect(c)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
-                centers.append(np.round(np.array([[x], [y]])))
+                # centers.append(np.round(np.array([[x], [y]])))
+                centers.append([[x], [y]])
 
         return centers, frame, fgmask
