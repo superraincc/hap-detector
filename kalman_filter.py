@@ -2,7 +2,8 @@ import numpy as np
 
 class KalmanFilter(object):
 
-    def __init__(self, stateVariance=1, measurementVariance=1):
+    def __init__(self, initMeasurement=np.array([[0], [0]]), 
+        stateVariance=1, measurementVariance=1):
 
         # 采样间隔时间
         self.dt = 0.04
@@ -26,8 +27,9 @@ class KalmanFilter(object):
         # 最小均方误差
         self.P = self.Q
 
-        # 状态向量
-        self.state = np.array([[0],[1],[0],[1]])
+        # 用初始测量更新状态向量的初值
+        self.state = np.array([[initMeasurement[0, 0]], [1],
+            [initMeasurement[1, 0]], [1]])
         
 
     def predict(self):

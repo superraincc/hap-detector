@@ -14,7 +14,7 @@ import copy
 from detector import Detector
 from tracker import Tracker
 
-vedio = r'D:\000AAA MINT\SCDX\HAP\HAP-small.mp4'
+video = r'D:\mint-src\hap-detector\data\hap-small-3.mp4'
 videoroute = r'D:\000AAA MINT\SCDX\HAP\HAP-output-MOG2\HAP-big\out.avi'
 
 # 超过这一下落高度，则报警为高空抛物事件
@@ -37,7 +37,7 @@ def main():
 
     # Create opencv video capture object
     # cap = cv2.VideoCapture('data/TrackingBugs.mp4')
-    cap = cv2.VideoCapture(vedio)
+    cap = cv2.VideoCapture(video)
 
     # 用于输出结果
     fps = cap.get(cv2.CAP_PROP_FPS)
@@ -51,7 +51,7 @@ def main():
     detector = Detector()
 
     # Create Object Tracker
-    tracker = Tracker(dist_thresh=200, max_frames_to_skip=10, max_trace_length=30, trackIdCount=100)
+    tracker = Tracker(dist_thresh=100, max_frames_to_skip=30, max_trace_length=30, trackIdCount=100)
 
     # Variables initialization
     skip_frame_count = 0
@@ -86,24 +86,24 @@ def main():
             # Track object using Kalman Filter
             tracker.Update(centers)
 
-            # For identified object tracks draw tracking line
-            # Use various colors to indicate different track_id
-            for i in range(len(tracker.tracks)):
-                # tracks是一个存储跟踪目标对象的数组
-                if (len(tracker.tracks[i].trace) > 1):
-                    y_array = [tracker.tracks[i].trace[j][1][0] for j in range(len(tracker.tracks[i].trace))]
-                    if max(y_array) - min(y_array) > hap_Threshold:
-                        print('Warning!!')
-                        cv2.putText(frame, 'WARNING!!', (50, 150), cv2.FONT_HERSHEY_COMPLEX, 5, (0, 0, 255), 12)
-                        for j in range(len(tracker.tracks[i].trace)-1):
-                            # Draw trace line
-                            x1 = tracker.tracks[i].trace[j][0][0]
-                            y1 = tracker.tracks[i].trace[j][1][0]
-                            x2 = tracker.tracks[i].trace[j+1][0][0]
-                            y2 = tracker.tracks[i].trace[j+1][1][0]
-                            clr = tracker.tracks[i].track_id % 9
-                            cv2.line(frame, (int(x1), int(y1)), (int(x2), int(y2)),
-                                    track_colors[clr], 2)
+        # For identified object tracks draw tracking line
+        # Use various colors to indicate different track_id
+        for i in range(len(tracker.tracks)):
+            # tracks是一个存储跟踪目标对象的数组
+            if (len(tracker.tracks[i].trace) > 1):
+                # y_array = [tracker.tracks[i].trace[j][1][0] for j in range(len(tracker.tracks[i].trace))]
+                # if max(y_array) - min(y_array) > hap_Threshold:
+                #     print('Warning!!')
+                #     cv2.putText(frame, 'WARNING!!', (50, 150), cv2.FONT_HERSHEY_COMPLEX, 5, (0, 0, 255), 12)
+                    for j in range(len(tracker.tracks[i].trace)-1):
+                        # Draw trace line
+                        x1 = tracker.tracks[i].trace[j][0][0]
+                        y1 = tracker.tracks[i].trace[j][1][0]
+                        x2 = tracker.tracks[i].trace[j+1][0][0]
+                        y2 = tracker.tracks[i].trace[j+1][1][0]
+                        clr = tracker.tracks[i].track_id % 9
+                        cv2.line(frame, (int(x1), int(y1)), (int(x2), int(y2)),
+                                track_colors[clr], 2)
 
         # Display the resulting tracking frame
         cv2.imshow('Tracking', frame)

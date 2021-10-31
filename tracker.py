@@ -1,24 +1,11 @@
-'''
-    File name         : tracker.py
-    File Description  : Tracker Using Kalman Filter & Hungarian Algorithm
-    Author            : Srini Ananthakrishnan
-    Date created      : 07/14/2017
-    Date last modified: 07/16/2017
-    Python Version    : 2.7
-'''
-
-# Import python libraries
 import numpy as np
 from kalman_filter import KalmanFilter
 from common import dprint
 from scipy.optimize import linear_sum_assignment
 
 
+# 针对每一个被跟踪物建立的Track对象
 class Track(object):
-    """Track class for every object to be tracked
-    Attributes:
-        None
-    """
 
     def __init__(self, prediction, trackIdCount):
         """Initialize variables used by Track class
@@ -29,7 +16,7 @@ class Track(object):
             None
         """
         self.track_id = trackIdCount  # identification of each track object
-        self.KF = KalmanFilter()  # KF instance to track this object
+        self.KF = KalmanFilter(initMeasurement=prediction)  # KF instance to track this object
         self.prediction = np.asarray(prediction)  # predicted centroids (x,y)
         self.skipped_frames = 0  # number of frames skipped undetected
         self.trace = []  # trace path
