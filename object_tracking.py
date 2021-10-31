@@ -1,56 +1,34 @@
-'''
-    File name         : object_tracking.py
-    File Description  : Multi Object Tracker Using Kalman Filter
-                        and Hungarian Algorithm
-    Author            : Srini Ananthakrishnan
-    Date created      : 07/14/2017
-    Date last modified: 07/16/2017
-    Python Version    : 2.7
-'''
-
-# Import python libraries
 import cv2
 import copy
 from detector import Detector
 from tracker import Tracker
 
-video = r'D:\mint-src\hap-detector\data\hap-small-3.mp4'
-videoroute = r'D:\000AAA MINT\SCDX\HAP\HAP-output-MOG2\HAP-big\out.avi'
+filename = 'hap-small-3'
+video_route = '.\\data\\' + filename + '.mp4'
+output_route = '.\\output\\' + filename + '-output.avi'
+
+# 是否保存输出文件
+ifsave = True
 
 # 超过这一下落高度，则报警为高空抛物事件
 hap_Threshold = 500
 
 def main():
-    """Main function for multi object tracking
-    Usage:
-        $ python2.7 objectTracking.py
-    Pre-requisite:
-        - Python2.7
-        - Numpy
-        - SciPy
-        - Opencv 3.0 for Python
-    Args:
-        None
-    Return:
-        None
-    """
 
-    # Create opencv video capture object
-    # cap = cv2.VideoCapture('data/TrackingBugs.mp4')
-    cap = cv2.VideoCapture(video)
+    cap = cv2.VideoCapture(video_route)
 
-    # 用于输出结果
+    # 获取视频参数
     fps = cap.get(cv2.CAP_PROP_FPS)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fourcc = cv2.VideoWriter_fourcc(*'MJPG')  # decoder
-    videoout = cv2.VideoWriter(videoroute, fourcc, fps, (width, height))
-    print((width, height))
+    print('size=', (width, height), 'fps=', fps)
 
-    # Create Object Detector
+    if ifsave:
+        videoWriter = cv2.VideoWriter(output_route, 
+            cv2.VideoWriter_fourcc(*'MJPG'), fps, (width, height))
+
     detector = Detector()
 
-    # Create Object Tracker
     tracker = Tracker(dist_thresh=100, max_frames_to_skip=30, max_trace_length=30, trackIdCount=100)
 
     # Variables initialization
@@ -79,7 +57,7 @@ def main():
         #     skip_frame_count += 1
         #     continue
 
-        centers, _, _ = detector.apply(frame)
+        centers, frame, _ = detector.apply(copy.copy(frame))
 
         if (len(centers) > 0):
 
@@ -112,13 +90,13 @@ def main():
         # cv2.imshow('Original', orig_frame)
 
         # 写视频文件
-        videoout.write(frame)
+        videoWriter.write(frame)
 
         # Slower the FPS
         # cv2.waitKey(30)
 
         # Check for key strokes
-        k = cv2.waitKey(30) & 0xff
+        k = cv2.waitKey(10) & 0xff
         if k == 27:  # 'esc' key has been pressed, exit program.
             break
         if k == 112:  # 'p' has been pressed. this will pause/resume the code.
