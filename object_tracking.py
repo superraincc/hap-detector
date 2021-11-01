@@ -3,7 +3,7 @@ import copy
 from detector import Detector
 from tracker import Tracker
 
-filename = 'hap-small-3'
+filename = 'hap-middle'
 video_route = '.\\data\\' + filename + '.mp4'
 output_route = '.\\output\\' + filename + '-output.avi'
 
